@@ -1,0 +1,8 @@
+**/node_modules
+*.wasm
+*.r1cs
+*.sym
+*.wtns
+**/circuits/*.json
+**/artifacts
+**/cache
