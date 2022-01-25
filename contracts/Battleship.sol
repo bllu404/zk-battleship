@@ -74,28 +74,28 @@ contract Battleship {
         }
     }
 
-    function guess(uint8 posX, uint8 posY) public {
+    function guess(uint8 _posX, uint8 _posY) public {
 
         require(gameActive, "Game inactive. Start one first!");
-        require(posX < BOARD_DIMENSION && posY < BOARD_DIMENSION, "Position out of bounds");
+        require(_posX < BOARD_DIMENSION && _posY < BOARD_DIMENSION, "Position out of bounds");
 
         if(msg.sender == player1.addr && currentTurn == 1 && !player2.hasActiveGuess) {
 
-            if(player1.score > 0 && player1.prevCorrectGuess.X == posX && player1.prevCorrectGuess.Y == posY) {
+            if(player1.score > 0 && player1.prevCorrectGuess.X == _posX && player1.prevCorrectGuess.Y == _posY) {
                 revert("You've already guessed that position");
             }
 
-            player1.currentGuess = Position(posX, posY);
+            player1.currentGuess = Position(_posX, _posY);
             player1.hasActiveGuess = true;
             currentTurn = 2;
 
         } else if (msg.sender == player2.addr && currentTurn == 2 && !player1.hasActiveGuess) {
 
-            if(player2.score > 0 && player2.prevCorrectGuess.X == posX && player2.prevCorrectGuess.Y == posY) {
+            if(player2.score > 0 && player2.prevCorrectGuess.X == _posX && player2.prevCorrectGuess.Y == _posY) {
                 revert("You've already guessed that position");
             }
 
-            player2.currentGuess = Position(posX, posY);
+            player2.currentGuess = Position(_posX, _posY);
             player2.hasActiveGuess = true;
             currentTurn = 1;
 
@@ -166,8 +166,8 @@ contract Battleship {
     }
 
     function guessAndDisprove(
-        uint8 posX, 
-        uint8 posY,
+        uint8 _posX, 
+        uint8 _posY,
         uint[2] calldata _a,
         uint[2][2] calldata _b,
         uint[2] calldata _c,
@@ -175,10 +175,10 @@ contract Battleship {
         ) external {
 
         disproveGuess(_a, _b, _c, _input);
-        guess(posX, posY);
+        guess(_posX, _posY);
     }
 
-    function guessAndApprove(uint8 posX, uint8 posY) external {
+    function guessAndApprove(uint8 _posX, uint8 _posY) external {
         if(msg.sender == player1.addr) {
             require(player2.score == 0, "You cannot guess after losing. Call `approveGuess()` instead.");
         } else if (msg.sender == player2.addr) {
@@ -186,7 +186,7 @@ contract Battleship {
         }
 
         approveGuess();
-        guess(posX, posY);
+        guess(_posX, _posY);
     }
 
     function resetGame() internal {
